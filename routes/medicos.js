@@ -5,18 +5,27 @@ var express = require('express');
 var app = express();
 
 app.get('/', (req, res) => {
-    Medico.find({}, (err, data) => {
-        if (err || data.length === 0) {
-            return res.status(404).json({
-                ok: false,
-                err: (err || 'No hay datos')
+    var desde = Number(req.query.desde) || 0;
+    Medico.find({})
+        .skip(desde)
+        .limit(5)
+        .populate('hospital')
+        .populate('usuario', 'nombre email')
+        .exec((err, data) => {
+            if (err || data.length === 0) {
+                return res.status(404).json({
+                    ok: false,
+                    err: (err || 'No hay datos')
+                });
+            }
+            Medico.count({}, (err, count) => {
+                res.json({
+                    ok: true,
+                    data,
+                    total: count
+                });
             });
-        }
-        res.json({
-            ok: true,
-            data
         });
-    });
 });
 
 app.post('/', verificaToken, (req, res) => {

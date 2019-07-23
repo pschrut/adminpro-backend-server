@@ -5,18 +5,26 @@ var { verificaToken } = require('../middlewares/autenticacion');
 var app = express();
 
 app.get('/', (req, res) => {
-    Hospital.find({}, (err, data) => {
-        if (err || data.length === 0) {
-            return res.status(404).json({
-                ok: false,
-                err
-            });
-        }
-        res.json({
-            ok: true,
-            data
+    var desde = Number(req.query.desde) || 0;
+    Hospital.find({}).populate('usuario', 'nombre email')
+        .skip(desde)
+        .limit(5)
+        .exec((err, data) => {
+            if (err || data.length === 0) {
+                return res.status(404).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            Hospital.count({}, (err, count) => {
+                res.json({
+                    ok: true,
+                    data,
+                    total: count
+                });
+            })
         });
-    });
 });
 
 app.post('/', verificaToken, (req, res) => {
