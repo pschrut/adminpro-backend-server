@@ -73,7 +73,7 @@ app.put('/:id', verificaToken, (req, res) => {
     });
 });
 
-app.post('/', verificaToken, (req, res) => {
+app.post('/', (req, res) => {
     var body = req.body;
     body.password = bcrypt.hashSync(body.password, 10);
 
