@@ -27,6 +27,35 @@ app.get('/', (req, res) => {
         });
 });
 
+app.get('/:id', (req, res) => {
+    var id = req.params.id;
+
+    Hospital.findById(id)
+        .populate('usuario', 'nombre img email')
+        .exec((err, data) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar hospital',
+                    errors: err
+                });
+            }
+
+            if (!data) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El hospital con id ' + id + ' no existe',
+                    errors: { message: 'No existe un hospital con ese ID' }
+                });
+            }
+
+            res.json({
+                ok: true,
+                hospital: data
+            });
+        });
+});
+
 app.post('/', verificaToken, (req, res) => {
     var body = req.body;
 

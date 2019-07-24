@@ -126,7 +126,6 @@ var subirPorTipo = (tipo, id, nombreArchivo, res) => {
 }
 
 var unlinkOldImage = (img, tipo) => {
-    console.log(img);
     if (img) {
         var pathViejo = `./uploads/${tipo}/${img}`;
 

@@ -8,7 +8,7 @@ var app = express();
 app.get('/', (req, res) => {
     var desde = Number(req.query.desde) || 0;
 
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
         .skip(desde)
         .limit(5)
         .exec((err, data) => {
