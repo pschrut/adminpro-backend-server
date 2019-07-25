@@ -83,7 +83,7 @@ var subirPorTipo = (tipo, id, nombreArchivo, res) => {
                     return res.status(400).json({
                         ok: true,
                         mensaje: 'Usuario no existe'
-                    })
+                    });
                 }
                 unlinkOldImage(data.img, tipo);
                 data.img = nombreArchivo;
