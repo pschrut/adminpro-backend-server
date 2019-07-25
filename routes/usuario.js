@@ -1,7 +1,7 @@
 var express = require('express');
 var Usuario = require('../models/usuario');
 var bcrypt = require('bcryptjs');
-var { verificaToken } = require('../middlewares/autenticacion');
+var { verificaToken, verificaAdminRole, verificaAdminOMismoUsuario } = require('../middlewares/autenticacion');
 
 var app = express();
 
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
         });
 });
 
-app.put('/:id', verificaToken, (req, res) => {
+app.put('/:id', [verificaToken, verificaAdminOMismoUsuario], (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
@@ -98,7 +98,7 @@ app.post('/', (req, res) => {
 });
 
 
-app.delete('/:id', verificaToken, (req, res) => {
+app.delete('/:id', [verificaToken, verificaAdminRole], (req, res) => {
     var id = req.params.id;
 
     Usuario.findByIdAndRemove(id, (err, usuario) => {
